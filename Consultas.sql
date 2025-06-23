@@ -241,3 +241,19 @@ LEFT JOIN film_actor
     ON actor.actor_id = film_actor.actor_id
 WHERE film_actor.film_id IS NULL
 ORDER BY actor.last_name, actor.first_name;
+
+28. Clientes que alquilaron tanto la película más como la menos alquilada
+
+SELECT c.first_name, c.last_name FROM rental r
+INNER JOIN inventory i 
+    ON r.inventory_id = i.inventory_id
+INNER JOIN customer c ON 
+r.customer_id = c.customer_id
+
+WHERE i.film_id IN (SELECT film_id FROM maxc)
+INTERSECT SELECT c.first_name, c.last_name FROM rental r
+INNER JOIN inventory i 
+    ON r.inventory_id = i.inventory_id
+INNER JOIN customer c 
+    ON r.customer_id = c.customer_id
+WHERE i.film_id IN (SELECT film_id FROM minc)
